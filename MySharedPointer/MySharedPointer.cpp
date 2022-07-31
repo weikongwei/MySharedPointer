@@ -118,17 +118,16 @@ public:
 
 template <typename T>
 class MySharedPointer {
-	T* p = nullptr;
-	unsigned* counter = nullptr;
+	T* p = new T;
+	unsigned* counter = new unsigned(0);
 public:
-	MySharedPointer()
-		: counter(new unsigned(0)) {
-	}
+	MySharedPointer() = default;
 	~MySharedPointer() {
 		this->reset();
 	}
 	MySharedPointer(T * sourceP)
-		: p(sourceP), counter(new unsigned(1)) {
+		: p(sourceP) {
+		*counter = 1;
 	}
 	MySharedPointer(const MySharedPointer<T> & sourceMSP)
 		: p(sourceMSP.p), counter(sourceMSP.counter) {
@@ -145,10 +144,10 @@ public:
 
 	MySharedPointer& operator=(T * sourceP) {
 		p = sourceP;
-		counter = 1;
+		*this->counter = 1;
 	}
 
-	// later change MySharedPointer& to void
+	// later try to change MySharedPointer& to void
 	MySharedPointer& operator=(const MySharedPointer<T> & sourceMSP){
 		p = sourceMSP.p;
 		counter = sourceMSP.counter;
@@ -182,11 +181,11 @@ public:
 
 
 void testMSP() {
-	BankAccount account("Wei", 999999999.9, 99999);
-	//BankAccount* account = new BankAccount("Wei", 999999999.9, 9999);
-	MySharedPointer<BankAccount> SP1(&account);
+	//BankAccount account("Wei", 999999999.9, 99999);
+	BankAccount* account = new BankAccount("Wei", 999999999.9, 9999);
+	MySharedPointer<BankAccount> SP1(account);
 	cout << "SP1's count at creation: " << SP1.getCount() << "\n";  //1
-	MySharedPointer<BankAccount> SP2(&account);
+	MySharedPointer<BankAccount> SP2(account);
 	cout << "SP2's count at creation: " << SP2.getCount() << "\n";  //1
 	MySharedPointer<BankAccount> SP3(SP2);
 	cout << "SP3's count at creation: " << SP3.getCount() << "\n";  //2
@@ -201,6 +200,9 @@ void testMSP() {
 
 
 	SP1.reset();
+	//SP4.reset();
+	//SP6.reset();
+	//delete account;
 	//cout << "SP1's counter: " << SP1.getCount() << " \n";
 	//if (SP1.get() == nullptr)
 	//cout << "SP1 is freed.\n"; //<< (SP1.get()->getAccountNumb()) << " \n";
