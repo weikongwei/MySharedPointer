@@ -1,0 +1,10 @@
+MySharedPointer\Debug
+\Debug
+\ipch
+.txt
+.obj
+.db
+.sln
+*.obj
+*.log
+*.txt
