@@ -118,16 +118,18 @@ public:
 
 template <typename T>
 class MySharedPointer {
-	T* p = new T;
-	unsigned* counter = new unsigned(0);
+	T* p;
+	unsigned* counter;
 public:
-	MySharedPointer() = default;
+	MySharedPointer() 
+	: p(new T), counter(new unsigned(0)){
+	}
 	~MySharedPointer() {
 		this->reset();
 	}
 	MySharedPointer(T * sourceP)
-		: p(sourceP) {
-		*counter = 1;
+		: p(sourceP), counter(new unsigned(1)){
+		
 	}
 	MySharedPointer(const MySharedPointer<T> & sourceMSP)
 		: p(sourceMSP.p), counter(sourceMSP.counter) {
@@ -144,7 +146,7 @@ public:
 
 	MySharedPointer& operator=(T * sourceP) {
 		p = sourceP;
-		*this->counter = 1;
+		counter = new unsigned(1);
 	}
 
 	// later try to change MySharedPointer& to void
@@ -185,7 +187,7 @@ public:
 
 void testMSP() {
 	//BankAccount account("Wei", 999999999.9, 99999);
-	BankAccount* account = new BankAccount("Wei", 999999999.9, 9999);
+	BankAccount* account = new BankAccount("Wei", 999999999.9, 99999);
 	MySharedPointer<BankAccount> SP1(account);
 	cout << "SP1's count at creation: " << SP1.getCount() << "\n";  //1
 	MySharedPointer<BankAccount> SP2(account);
