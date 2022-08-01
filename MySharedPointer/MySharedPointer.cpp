@@ -38,7 +38,7 @@ public:
 	}
 
 	~BankAccount() {
-		printf("\n Destructor called for %05d.\n\n", accountNum);
+			printf("\n Destructor called for %05d.\n\n", accountNum);
 	}
 
 	BankAccount& operator = (const BankAccount &) = default;
@@ -171,10 +171,13 @@ public:
 	}
 
 	void reset() {
-		(*this->counter)--;
-		if ((*this->counter) == 0 ) {
-			delete this->counter;
-			delete this->p;
+		if (this->counter != nullptr) {
+			(*this->counter)--;
+			if ((*this->counter) == 0) {
+				delete this->counter;
+				if (this->p != nullptr)
+					delete this->p;
+			}
 		}
 	}
 };
@@ -192,15 +195,16 @@ void testMSP() {
 	MySharedPointer<BankAccount> SP4(move(SP2));
 	cout << "SP4's count at creation: " << SP4.getCount() << "\n";  //2
 	SP3.reset();
-	cout << "SP4's count after SP3 reset: " << SP4.getCount() << "\n";  //1
+	cout << "SP4's count after SP3 reset: " << SP4.getCount() << "\n\n";  //1
 	MySharedPointer<BankAccount> SP5 = SP4;
 	cout << "SP5's count at creation: " << SP5.getCount() << "\n";  //2
+	cout << "SP4's count after assigned to SP5: " << SP4.getCount() << "\n\n";  //2
+
 	MySharedPointer<BankAccount> SP6 = move(SP5);
 	cout << "SP6's count at creation: " << SP6.getCount() << "\n";  //2
 
 
 	SP1.reset();
-	//SP4.reset();
 	//SP6.reset();
 	//delete account;
 	//cout << "SP1's counter: " << SP1.getCount() << " \n";
