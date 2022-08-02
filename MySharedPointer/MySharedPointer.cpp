@@ -115,16 +115,13 @@ public:
 	}
 };
 
-
 template <typename T>
 class MySharedPointer {
 	T* p;
 	unsigned* counter;
 public:
-	MySharedPointer() 
-	: p(new T), counter(new unsigned(0)){
-	}
-	~MySharedPointer() {
+	MySharedPointer(){}
+	~MySharedPointer(){
 		this->reset();
 	}
 	MySharedPointer(T * sourceP)
